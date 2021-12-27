@@ -259,7 +259,7 @@ public class WifiInjector {
                 mContext.getSystemService(SubscriptionManager.class);
         // Legacy config store
         DelayedDiskWrite writer = new DelayedDiskWrite();
-        mWifiNetworkHistory = new WifiNetworkHistory(mContext, writer);
+        mWifiNetworkHistory = new WifiNetworkHistory(mContext, writer, mClock);
         mIpConfigStore = new IpConfigStore(writer);
         mWifiConfigStoreLegacy = new WifiConfigStoreLegacy(
                 mWifiNetworkHistory, mWifiNative, new WifiConfigStoreLegacy.IpConfigStoreWrapper(),
@@ -267,7 +267,7 @@ public class WifiInjector {
         // Config Manager
         mWifiConfigManager = new WifiConfigManager(mContext, mClock,
                 UserManager.get(mContext), makeTelephonyManager(),
-                mWifiKeyStore, mWifiConfigStore, mWifiPermissionsUtil,
+                mWifiKeyStore, mWifiConfigStore, mWifiConfigStoreLegacy, mWifiPermissionsUtil,
                 mWifiPermissionsWrapper, this, new NetworkListSharedStoreData(mContext),
                 new NetworkListUserStoreData(mContext),
                 new DeletedEphemeralSsidsStoreData(mClock), new RandomizedMacStoreData(),

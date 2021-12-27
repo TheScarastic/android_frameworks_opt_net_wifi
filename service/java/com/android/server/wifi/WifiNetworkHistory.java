@@ -106,15 +106,17 @@ public class WifiNetworkHistory {
 
     protected final DelayedDiskWrite mWriter;
     Context mContext;
+    private Clock mClock;
     /*
      * Lost config list, whenever we read a config from networkHistory.txt that was not in
      * wpa_supplicant.conf
      */
     HashSet<String> mLostConfigsDbg = new HashSet<String>();
 
-    public WifiNetworkHistory(Context c, DelayedDiskWrite writer) {
+    public WifiNetworkHistory(Context c, DelayedDiskWrite writer, Clock clock) {
         mContext = c;
         mWriter = writer;
+        mClock = clock;
     }
 
     /**
@@ -317,7 +319,7 @@ public class WifiNetworkHistory {
      */
     public void readNetworkHistory(Map<String, WifiConfiguration> configs,
             Map<Integer, ScanDetailCache> scanDetailCaches,
-            Set<String> deletedEphemeralSSIDs) {
+            Map<String, Long> deletedEphemeralSSIDs) {
 
         try (DataInputStream in =
                      new DataInputStream(new BufferedInputStream(
@@ -515,7 +517,7 @@ public class WifiNetworkHistory {
                             break;
                         case DELETED_EPHEMERAL_KEY:
                             if (!TextUtils.isEmpty(value)) {
-                                deletedEphemeralSSIDs.add(value);
+                                deletedEphemeralSSIDs.put(value, mClock.getWallClockMillis());
                             }
                             break;
                         case CREATOR_NAME_KEY:

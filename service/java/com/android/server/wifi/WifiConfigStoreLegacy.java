@@ -162,7 +162,7 @@ public class WifiConfigStoreLegacy {
      * @param deletedEphemeralSSIDs Map of configKey to WifiConfiguration object.
      */
     private void loadFromNetworkHistory(
-            Map<String, WifiConfiguration> configurationMap, Set<String> deletedEphemeralSSIDs) {
+            Map<String, WifiConfiguration> configurationMap, Map<String, Long> deletedEphemeralSSIDs) {
         // TODO: Need  to revisit the scan detail cache persistance. We're not doing it in the new
         // config store, so ignore it here as well.
         Map<Integer, ScanDetailCache> scanDetailCaches = new HashMap<>();
@@ -275,7 +275,7 @@ public class WifiConfigStoreLegacy {
     public WifiConfigStoreDataLegacy read() {
         final Map<String, WifiConfiguration> configurationMap = new HashMap<>();
         final SparseArray<Map<String, String>> networkExtras = new SparseArray<>();
-        final Set<String> deletedEphemeralSSIDs = new HashSet<>();
+        final Map<String, Long> deletedEphemeralSSIDs = new HashMap<>();
 
         loadFromWpaSupplicant(configurationMap, networkExtras);
         loadFromNetworkHistory(configurationMap, deletedEphemeralSSIDs);
@@ -348,11 +348,11 @@ public class WifiConfigStoreLegacy {
      */
     public static class WifiConfigStoreDataLegacy {
         private List<WifiConfiguration> mConfigurations;
-        private Set<String> mDeletedEphemeralSSIDs;
+        private Map<String, Long> mDeletedEphemeralSSIDs;
         // private List<HomeSP> mHomeSps;
 
         WifiConfigStoreDataLegacy(List<WifiConfiguration> configurations,
-                Set<String> deletedEphemeralSSIDs) {
+                Map<String, Long> deletedEphemeralSSIDs) {
             mConfigurations = configurations;
             mDeletedEphemeralSSIDs = deletedEphemeralSSIDs;
         }
@@ -361,7 +361,7 @@ public class WifiConfigStoreLegacy {
             return mConfigurations;
         }
 
-        public Set<String> getDeletedEphemeralSSIDs() {
+        public Map<String, Long> getDeletedEphemeralSSIDs() {
             return mDeletedEphemeralSSIDs;
         }
     }

@@ -3164,7 +3164,7 @@ public class WifiConfigManager {
         // Setup user store for the current user in case it have not setup yet, so that data
         // owned by the current user will be backed to the user store.
         if (mDeferredUserUnlockRead) {
-            mWifiConfigStore.setUserStores(WifiConfigStore.createUserFiles(mCurrentUserId));
+            mWifiConfigStore.setUserStores(WifiConfigStore.createUserFiles(mCurrentUserId, mFrameworkFacade.isNiapModeOn(mContext)));
             mDeferredUserUnlockRead = false;
         }
 
